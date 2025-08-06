@@ -5,6 +5,7 @@ import pandas as pd
 from pyproj import Transformer
 from pathlib import Path
 import matplotlib.patheffects as path_effects
+from adjustText import adjust_text
 
 # Load raster
 tif_path = Path(r"C:\Users\robbl\OneDrive - lincolnagritech.co.nz\Documents\QGIS\Selwyn\Selwyn_ScottsRd_Ortho_20210702_20cm.tif")
@@ -36,9 +37,26 @@ with rasterio.open(tif_path) as src:
     ax.scatter(points['x'], points['y'], color='red', edgecolor='black', s=40, label='Sampling Points')
 
     # Label points
+    texts = []
     for _, row in points.iterrows():
-        ax.text(row['x']+2, row['y']+5, row['Hole Name'], fontsize=10, fontweight = 'bold',ha='left', va='bottom', color='black', path_effects=[path_effects.Stroke(linewidth=3, foreground='white'), path_effects.Normal()])
+        txt = ax.text(row['x'], row['y'], row['Hole Name'], fontsize=10, fontweight = 'bold',ha='left', va='bottom', color='black', path_effects=[path_effects.Stroke(linewidth=3, foreground='white'), path_effects.Normal()])
+        texts.append(txt)
 
+    adjust_text(texts, ax=ax, only_move={'points': 'y', 'text': 'y'},
+                    arrowprops=dict(arrowstyle='->', color='gray'))
+    # Add North arrow
+    ax.annotate('N',
+                xy=(0.95, 0.1), xytext=(0.95, 0.02),
+                arrowprops=dict(facecolor='black', width=5, headwidth=15),
+                ha='center', va='center',
+                fontsize=14, fontweight='bold',
+                xycoords='axes fraction')
+    # ✅ Add scale bar (example: 100 m)
+    scale_length = 100  # in map units (meters if UTM)
+    x_start = ax.get_xlim()[0] + 100
+    y_start = ax.get_ylim()[0] + 100
+    ax.hlines(y=y_start, xmin=x_start, xmax=x_start + scale_length, colors='black', linewidth=4)
+    ax.text(x_start + scale_length / 2, y_start + 30, '100 m', ha='center', va='bottom', fontsize=10)
     ax.set_xlabel('Easting (m)')
     ax.set_ylabel('Northing (m)')
     ax.legend()
