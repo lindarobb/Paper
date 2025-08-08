@@ -242,7 +242,13 @@ def plot():
         "100 m", ha="center", va="bottom", fontsize=10
 
     )
-
+    # Add North arrow
+    ax.annotate('N',
+                xy=(0.95, 0.1), xytext=(0.95, 0.02),
+                arrowprops=dict(facecolor='black', width=5, headwidth=15),
+                ha='center', va='center',
+                fontsize=14, fontweight='bold',
+                xycoords='axes fraction')
     # axis labels & formatting
 
     ax.set(xlabel="Longitude", ylabel="Latitude")
@@ -260,3 +266,5 @@ def plot():
     plt.savefig(output_path, dpi=300, bbox_inches="tight")
 
     plt.show()
+if __name__ == "__main__":
+    plot()
