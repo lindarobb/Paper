@@ -37,7 +37,7 @@ averages = (
 # (Optional) Set categorical order in averages if needed
 averages['gsize'] = pd.Categorical(averages['gsize'], categories=gsize_order, ordered=True)
 # Plot
-g = sns.FacetGrid(averages, row="depth", sharey=False, height=2.5, aspect=2)
+g = sns.FacetGrid(averages, row="depth", sharey=False, height=2, aspect=6)
 
 def facet_scatter(data, color, **kwargs):
     plt.errorbar(
@@ -54,14 +54,17 @@ g.set_titles("")  # Remove facet titles
 for i, ax in enumerate(g.axes.flat):
     ax.tick_params(axis='x', labelrotation=0)
     ax.set_ylabel(f"Depth: {g.row_names[i]}", fontsize=10, fontweight='bold')
+    ax.grid(True, axis='y',linestyle='--', alpha=0.5)
+    ax.grid(True, axis='x', linestyle='--', alpha=0.5)  # Grid at x-ticks
+    ax.xaxis.set_ticks_position('bottom')
     # Set x-label only for the bottom facet
     if i == len(g.axes.flat) - 1:
-        ax.set_xlabel("Rw (Bq/L)")
+        ax.set_xlabel(r"$R_{w}$ (Bq/L)")
     else:
         ax.set_xlabel("")
 
 # Add a single y-label to the figure
-g.fig.text(0.04, 0.5, "Grain size of sediment samples (mm)", va='center', rotation='vertical', fontsize=12)
+g.fig.text(-0.03, 0.5, "Grain size of sediment samples (mm)", va='center', rotation='vertical', fontsize=12)
 
 plt.tight_layout()
 plt.savefig(output_path, dpi=300, bbox_inches="tight")
