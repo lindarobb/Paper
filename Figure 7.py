@@ -5,7 +5,7 @@ import seaborn as sns
 #file_path = Path(r"C:\Users\robbl\OneDrive - lincolnagritech.co.nz\Documents\R\Radon Paper\Final Rn scripts\grain_size.csv")
 # Read CSV
 grain_size = pd.read_csv(r"C:\Users\robbl\OneDrive - lincolnagritech.co.nz\Documents\R\Radon Paper\Final Rn scripts\grain_size_results.csv")
-
+output_path = r"C:\Users\robbl\OneDrive - lincolnagritech.co.nz\Documents\R\Radon Paper\Final Rn scripts\grain_size_plot.png"
 # Ensure 'depth' is categorical and keeps original order
 grain_size['depth'] = pd.Categorical(grain_size['depth'], categories=grain_size['depth'].unique(), ordered=True)
 
@@ -64,5 +64,5 @@ for i, ax in enumerate(g.axes.flat):
 g.fig.text(0.04, 0.5, "Grain size of sediment samples (mm)", va='center', rotation='vertical', fontsize=12)
 
 plt.tight_layout()
-#plt.savefig(output_path, dpi=300, bbox_inches="tight")
+plt.savefig(output_path, dpi=300, bbox_inches="tight")
 plt.show()
