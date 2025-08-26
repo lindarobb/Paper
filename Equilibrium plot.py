@@ -1,15 +1,23 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from adjustText import adjust_text
+# --- define sites you want to keep ---
+keep_sites = ["River", "s30", "s31", "s32", "s33", "s34", "s35", "s36", "s37","s5"]
 
 # --- load data ---
-samples = pd.read_csv("C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Rn paper/Selwyn_Rn.csv").dropna()
-samples = samples.query("season == 'summer' & ~site.isin(['s15','s16','s17','Riv_A2','Riv_A4','Riv_E2','Riv_C2']) & method == 'wat250'")
+samples = (
+    pd.read_csv("C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Rn paper/Selwyn_Rn.csv")
+    .dropna()
+    .query("season == 'summer' & site.isin(@keep_sites) & method == 'wat250'")
+)
 
-samples_1 = pd.read_csv("C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Rn paper/Selwyn_Rn_Depth.csv")
-samples_1 = (samples_1.rename(columns={"mid":"depth"})
-             .drop(columns=["winter","summer"])
-             .query("~site.isin(['s15','s16','s17','Riv_A2','Riv_A4','Riv_E2','Riv_C2'])"))
+samples_1 = (
+    pd.read_csv("C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Rn paper/Selwyn_Rn_Depth.csv")
+    .rename(columns={"mid":"depth"})
+    .drop(columns=["winter","summer"])
+    .query("site.isin(@keep_sites)")
+)
 
 # --- shared functions ---
 decay = -0.181
@@ -28,7 +36,7 @@ fig, (ax1, ax2) = plt.subplots(1,2, figsize=(12,6))
 # scatter PG vs G
 for source, subset in samples.groupby("source"):
     if source == "PG":  # light circles
-        ax1.scatter(subset["distance"], subset["rn"]/1000, c="lightblue", marker="o", label="PG")
+        ax1.scatter(subset["distance"], subset["rn"]/1000, c="deepskyblue", marker="o", label="PG")
     elif source == "G":  # dark squares
         ax1.scatter(subset["distance"], subset["rn"]/1000, c="navy", marker="s", label="G")
     else:  # fallback
@@ -53,8 +61,8 @@ ax1.plot(dat["distance"], dat["rn"]/1000, "--", color="grey", lw=1)
 #ax1.text(200, eqlbrm/1000+0.2, "equilibrium", color="grey", fontsize=10, fontstyle="italic")
 ax1.set_xlabel("Distance from river (m)")
 ax1.set_ylabel(r"$R_{w}$ (Bq/l)")
-ax1.set_xlim(0,600)
-ax1.set_ylim(0,10)
+ax1.set_xlim(-20,600)
+ax1.set_ylim(0,10.5)
 ax1.set_xticks(np.arange(0,601,100))
 ax1.set_yticks(np.arange(0,11,1))
 ax1.legend(title="Source", loc="lower right")
@@ -69,7 +77,7 @@ dat["depth"] = dat["depth"] + 4  # shift
 
 for source, subset in samples_1.groupby("source"):
     if source == "PG":
-        ax2.scatter(subset["depth"], subset["rn"], c="lightblue", marker="o", label="PG")
+        ax2.scatter(subset["depth"], subset["rn"], c="deepskyblue", marker="o", label="PG")
     elif source == "G":
         ax2.scatter(subset["depth"], subset["rn"], c="navy", marker="s", label="G")
     else:
@@ -87,19 +95,22 @@ ax2.errorbar(
 )
 # site labels
 
+texts = []
 for _, row in samples_1.iterrows():
-    ax2.text(row["depth"], row["rn"] + 0.4, row["site"],
-             fontsize=9, ha="center", va="bottom",
-             bbox=dict(facecolor='white', edgecolor='none', alpha=0.7, boxstyle='round,pad=0.2'))
+    texts.append(
+        ax2.text(row["depth"], row["rn"] + 0.4, row["site"],
+                 fontsize=9, ha="center", va="bottom",
+                 bbox=dict(facecolor='white', edgecolor='none', alpha=0.7, boxstyle='round,pad=0.2'))
+    )
 
-
+adjust_text(texts, ax=ax2, arrowprops=dict(arrowstyle="->", color="grey", lw=0.5))
 ax2.plot(dat["depth"], dat["rn"], "--", color="grey", lw=1)
 
 #ax2.axhline(eqlbrm, ls="--", color="grey", lw=0.5)
 #ax2.text(22, eqlbrm+0.4, "equilibrium", color="grey", fontsize=10, fontstyle="italic")
 ax2.set_xlabel("Depth (m bgl)")
 ax2.set_ylabel("Rw (Bq/l)")
-ax2.set_xlim(0,35)
+ax2.set_xlim(-1,35)
 ax2.set_ylim(0,21)
 ax2.set_xticks(np.arange(0,36,5))
 ax2.set_yticks(np.arange(0,22,2))
