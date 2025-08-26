@@ -2,6 +2,15 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from adjustText import adjust_text
+import os
+
+# define folder
+out_dir = r"C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Rn paper/Plots"
+os.makedirs(out_dir, exist_ok=True)   # make folder if it doesn't exist
+
+# full file path
+out_path = os.path.join(out_dir, "combo_plot_py.png")
+
 # --- define sites you want to keep ---
 keep_sites = ["River", "s30", "s31", "s32", "s33", "s34", "s35", "s36", "s37","s5"]
 
@@ -65,6 +74,7 @@ ax1.set_xlim(-20,600)
 ax1.set_ylim(0,10.5)
 ax1.set_xticks(np.arange(0,601,100))
 ax1.set_yticks(np.arange(0,11,1))
+ax1.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.7)
 ax1.legend(title="Source", loc="lower right")
 ax1.text(0.02, 0.95, "a", transform=ax1.transAxes, fontsize=16, fontweight="bold", va="top")  # panel label
 
@@ -114,10 +124,11 @@ ax2.set_xlim(-1,35)
 ax2.set_ylim(0,21)
 ax2.set_xticks(np.arange(0,36,5))
 ax2.set_yticks(np.arange(0,22,2))
+ax2.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.7)
 
 ax2.legend(title="Source", loc="lower right")
 ax2.text(0.02, 0.95, "b", transform=ax2.transAxes, fontsize=16, fontweight="bold", va="top")  # panel label
 
 plt.tight_layout()
-plt.savefig("combo_plot_py.png", dpi=300)
+plt.savefig(out_path, dpi=300)
 plt.show()
