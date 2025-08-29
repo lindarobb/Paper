@@ -75,7 +75,7 @@ ax1.set_ylim(0,10.5)
 ax1.set_xticks(np.arange(0,601,100))
 ax1.set_yticks(np.arange(0,11,1))
 ax1.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.7)
-ax1.legend(title="Source", loc="lower right")
+ax1.legend(title=None, loc="lower right")
 ax1.text(0.02, 0.95, "a", transform=ax1.transAxes, fontsize=16, fontweight="bold", va="top")  # panel label
 
 # --- depth plot ---
@@ -126,7 +126,7 @@ ax2.set_xticks(np.arange(0,36,5))
 ax2.set_yticks(np.arange(0,22,2))
 ax2.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.7)
 
-ax2.legend(title="Source", loc="lower right")
+ax2.legend(title=None, loc="lower right")
 ax2.text(0.02, 0.95, "b", transform=ax2.transAxes, fontsize=16, fontweight="bold", va="top")  # panel label
 
 plt.tight_layout()
