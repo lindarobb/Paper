@@ -5,14 +5,14 @@ import seaborn as sns
 import os
 
 # --- Set up plotting style ---
-sns.set(style="whitegrid", context="talk")
+sns.set_style("ticks")  # cleaner look
 
 # --- Output folder ---
 out_dir = r"C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Rn paper/Plots"
 os.makedirs(out_dir, exist_ok=True)   # make folder if it doesn't exist
 
 # full file path
-out_path = os.path.join(out_dir, "Rn_and_Em_means_and_medians_2.png")
+out_path = os.path.join(out_dir, "Rn_and_Em_means_and_medians_3.png")
 
 # --- Load data ---
 def funks(name):
