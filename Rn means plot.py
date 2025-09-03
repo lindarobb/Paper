@@ -11,10 +11,8 @@ sns.set(style="whitegrid", context="talk")
 out_dir = r"C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Rn paper/Plots"
 os.makedirs(out_dir, exist_ok=True)   # make folder if it doesn't exist
 
-
-out_file = "Rn_and_Em_means_and_medians.jpg"
 # full file path
-out_path = os.path.join(out_dir, "Rn_and_Em_means_and_medians.png")
+out_path = os.path.join(out_dir, "Rn_and_Em_means_and_medians_2.png")
 
 # --- Load data ---
 def funks(name):
@@ -80,16 +78,16 @@ stats = (
 stats["mean"] = np.exp(stats["mean"])
 
 # Helper: map method+unit to dodge positions
-def get_xpos(method, unit, methods, units):
-    """Return x-position for a given method + unit in a dodged seaborn boxplot"""
-    base = methods.index(method)
-    n_units = len(units)
-    width = 0.8   # total box width
-    dodge = width / n_units
-    if unit == units[0]:  # e.g. G
-        return base - dodge/2
-    else:                 # e.g. PG
-        return base + dodge/2
+#def get_xpos(method, unit, methods, units):
+ #   """Return x-position for a given method + unit in a dodged seaborn boxplot"""
+  #  base = methods.index(method)
+   # n_units = len(units)
+    #width = 0.8   # total box width
+    #dodge = width / n_units
+    #if unit == units[0]:  # e.g. G
+     #   return base - dodge/2
+    #else:                 # e.g. PG
+     #   return base + dodge/2
 
 methods = list(combo["method"].unique())
 units = list(combo["unit"].unique())  # should be ["G", "PG"]
@@ -104,10 +102,15 @@ sns.boxplot(
     fliersize=2, width=0.5, ax=ax2
 )
 
-# Add black triangles (means) at correct positions (inside each box)
+# Add black triangles (means) centered in each box
+n_units = len(units)
+dodge = 0.8 / n_units
 for _, row in stats.iterrows():
-    xpos = get_xpos(row["method"], row["unit"], methods, units)
+    method_index = methods.index(row["method"])
+    unit_index = units.index(row["unit"])
+    xpos = method_index - 0.4 + dodge * (unit_index + 0.5)
     ax2.scatter(xpos, row["mean"], marker="^", s=100, color="black", zorder=5)
+
 
 ax2.set_ylabel(r"$E_m$ (Bq/kg)")
 ax2.set_xlabel("")
@@ -123,8 +126,11 @@ sns.boxplot(
 )
 
 for _, row in means.iterrows():
-    xpos = get_xpos(row["method"], row["unit"], methods, units)
+    method_index = methods.index(row["method"])
+    unit_index = units.index(row["unit"])
+    xpos = method_index - 0.4 + dodge * (unit_index + 0.5)
     ax1.scatter(xpos, row["mean"], marker="^", s=100, color="black", zorder=5)
+
 
 ax1.set_ylabel(r"$R_{eq}$ (Bq/L)")
 ax1.set_xlabel("")
@@ -132,4 +138,5 @@ ax1.set_ylim(0, 100)
 ax1.legend(title="Unit", loc="upper right")
 plt.tight_layout()
 plt.savefig(out_path, dpi=300)
+plt.show()
 plt.close()
