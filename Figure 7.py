@@ -43,7 +43,7 @@ def facet_scatter(data, color, **kwargs):
     plt.errorbar(
         data['avg_Rn_water'], data['gsize'],
         xerr=data['avg_Rn_error'],
-        fmt='o', color="navy", ecolor="black", elinewidth=1, capsize=3
+        fmt='o', color="navy", ecolor="black", elinewidth=1, capsize=4
     )
 
 g.map_dataframe(facet_scatter)
