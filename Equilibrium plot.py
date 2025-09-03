@@ -12,20 +12,20 @@ os.makedirs(out_dir, exist_ok=True)   # make folder if it doesn't exist
 out_path = os.path.join(out_dir, "combo_plot_py.png")
 
 # --- define sites you want to keep ---
-keep_sites = ["River", "s30", "s31", "s32", "s33", "s34", "s35", "s36", "s37","s5"]
+#keep_sites = ["River", "s30", "s31", "s32", "s33", "s34", "s35", "s36", "s37","s5"]
 
 # --- load data ---
 samples = (
     pd.read_csv("C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Rn paper/Selwyn_Rn.csv")
     .dropna()
-    .query("season == 'summer' & site.isin(@keep_sites) & method == 'wat250'")
+    .query("season == 'summer' & method == 'wat250'")
 )
 
 samples_1 = (
     pd.read_csv("C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Rn paper/Selwyn_Rn_Depth.csv")
     .rename(columns={"mid":"depth"})
     .drop(columns=["winter","summer"])
-    .query("site.isin(@keep_sites)")
+    #.query("site.isin(@keep_sites)")
 )
 
 # --- shared functions ---
@@ -64,10 +64,10 @@ ax1.errorbar(samples["distance"], samples["rn"]/1000,
              fmt="none", ecolor="black", elinewidth=0.8, capsize=2)
 
 # fit line
-ax1.plot(dat["distance"], dat["rn"]/1000, "--", color="grey", lw=1)
+#ax1.plot(dat["distance"], dat["rn"]/1000, "--", color="grey", lw=1)
 
-#ax1.axhline(eqlbrm/1000, ls="--", color="grey", lw=0.5)
-#ax1.text(200, eqlbrm/1000+0.2, "equilibrium", color="grey", fontsize=10, fontstyle="italic")
+ax1.axhline(eqlbrm/1000, ls="--", color="red", lw=0.5)
+ax1.text(200, eqlbrm/1000+0.2, "equilibrium", color="grey", fontsize=10, fontstyle="italic")
 ax1.set_xlabel("Distance from river (m)")
 ax1.set_ylabel(r"$R_{w}$ (Bq/l)")
 ax1.set_xlim(-20,600)
@@ -108,16 +108,21 @@ ax2.errorbar(
 texts = []
 for _, row in samples_1.iterrows():
     texts.append(
-        ax2.text(row["depth"], row["rn"] + 0.4, row["site"],
+        ax2.text(row["depth"], row["rn"], row["site"],  # start at actual data point
                  fontsize=9, ha="center", va="bottom",
                  bbox=dict(facecolor='white', edgecolor='none', alpha=0.7, boxstyle='round,pad=0.2'))
     )
 
-adjust_text(texts, ax=ax2, arrowprops=dict(arrowstyle="->", color="grey", lw=0.5))
-ax2.plot(dat["depth"], dat["rn"], "--", color="grey", lw=1)
+# Adjust positions to avoid overlaps
+adjust_text(
+    texts, ax=ax2,
+    only_move={'points': 'xy', 'text': 'xy'},   # let them move vertically
+    arrowprops=dict(arrowstyle="->", color="grey", lw=0.5)
+)
+#ax2.plot(dat["depth"], dat["rn"], "--", color="grey", lw=1)
 
-#ax2.axhline(eqlbrm, ls="--", color="grey", lw=0.5)
-#ax2.text(22, eqlbrm+0.4, "equilibrium", color="grey", fontsize=10, fontstyle="italic")
+ax2.axhline(eqlbrm, ls="--", color="red", lw=0.5)
+ax2.text(12, eqlbrm+0.4, "equilibrium", color="grey", fontsize=10, fontstyle="italic")
 ax2.set_xlabel("Depth (m bgl)")
 ax2.set_ylabel("Rw (Bq/l)")
 ax2.set_xlim(-1,35)
