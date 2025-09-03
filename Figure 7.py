@@ -43,7 +43,7 @@ def facet_scatter(data, color, **kwargs):
     plt.errorbar(
         data['avg_Rn_water'], data['gsize'],
         xerr=data['avg_Rn_error'],
-        fmt='o', color="red", ecolor="black", elinewidth=1, capsize=3
+        fmt='o', color="navy", ecolor="black", elinewidth=1, capsize=3
     )
 
 g.map_dataframe(facet_scatter)
@@ -53,7 +53,7 @@ g.set_titles("")  # Remove facet titles
 
 for i, ax in enumerate(g.axes.flat):
     ax.tick_params(axis='x', labelrotation=0)
-    ax.set_ylabel(f"Depth: {g.row_names[i]}", fontsize=10, fontweight='bold')
+    ax.set_ylabel(f"Depth: {g.row_names[i]}", fontsize=12, fontweight='bold')
     ax.grid(True, axis='y',linestyle='--', alpha=0.5)
     ax.grid(True, axis='x', linestyle='--', alpha=0.5)  # Grid at x-ticks
     ax.xaxis.set_ticks_position('bottom')
