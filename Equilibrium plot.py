@@ -17,7 +17,7 @@ out_path = os.path.join(out_dir, "combo_plot_py.png")
 # --- load data ---
 samples = (
     pd.read_csv("C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Rn paper/Selwyn_Rn.csv")
-    .dropna()
+    #.dropna()
     .query("season == 'summer' & method == 'wat250'")
 )
 
@@ -67,9 +67,9 @@ ax1.errorbar(samples["distance"], samples["rn"]/1000,
 #ax1.plot(dat["distance"], dat["rn"]/1000, "--", color="grey", lw=1)
 
 ax1.axhline(eqlbrm/1000, ls="--", color="red", lw=0.5)
-ax1.text(200, eqlbrm/1000+0.2, "equilibrium", color="grey", fontsize=10, fontstyle="italic")
-ax1.set_xlabel("Distance from river (m)")
-ax1.set_ylabel(r"$R_{w}$ (Bq/l)")
+ax1.text(200, eqlbrm/1000+0.2, "equilibrium", color="grey", fontsize=12, fontstyle="italic")
+ax1.set_xlabel("Distance from river (m)", fontsize=12)
+ax1.set_ylabel(r"$R_{w}$ (Bq/l)", fontsize=12)
 ax1.set_xlim(-20,600)
 ax1.set_ylim(0,10.5)
 ax1.set_xticks(np.arange(0,601,100))
@@ -99,34 +99,32 @@ xerr = np.array([
 ])
 ax2.errorbar(
     samples_1["depth"], samples_1["rn"],
-    xerr=xerr,
-    yerr=samples_1["sigma2"],
-    fmt="none", ecolor="black", elinewidth=0.8, capsize=2
+    xerr=xerr, yerr=samples_1["sigma2"],
+    fmt="none",  # <--- keeps it as error bars only
+    ecolor="black", elinewidth=0.8, capsize=2
 )
 # site labels
 
 texts = []
 for _, row in samples_1.iterrows():
-    texts.append(
-        ax2.text(row["depth"], row["rn"], row["site"],  # start at actual data point
+          ax2.text(row["depth"], row["rn"] + 0.2, row["site"],  # start at actual data point
                  fontsize=9, ha="center", va="bottom",
                  bbox=dict(facecolor='white', edgecolor='none', alpha=0.7, boxstyle='round,pad=0.2'))
-    )
 
 # Adjust positions to avoid overlaps
 adjust_text(
     texts, ax=ax2,
-    only_move={'points': 'xy', 'text': 'xy'},   # let them move vertically
-    arrowprops=dict(arrowstyle="->", color="grey", lw=0.5)
+    only_move={'points': 'xy', 'text': 'xy'},
+    arrowprops=None   # remove lines
 )
 #ax2.plot(dat["depth"], dat["rn"], "--", color="grey", lw=1)
 
 ax2.axhline(eqlbrm, ls="--", color="red", lw=0.5)
-ax2.text(12, eqlbrm+0.4, "equilibrium", color="grey", fontsize=10, fontstyle="italic")
-ax2.set_xlabel("Depth (m bgl)")
-ax2.set_ylabel("Rw (Bq/l)")
+ax2.text(12, eqlbrm+0.4, "equilibrium", color="grey", fontsize=12, fontstyle="italic")
+ax2.set_xlabel("Depth (m bgl)", fontsize=12)
+ax2.set_ylabel("Rw (Bq/l)", fontsize=12)
 ax2.set_xlim(-1,35)
-ax2.set_ylim(0,21)
+ax2.set_ylim(0,22)
 ax2.set_xticks(np.arange(0,36,5))
 ax2.set_yticks(np.arange(0,22,2))
 ax2.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.7)
