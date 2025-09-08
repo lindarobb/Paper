@@ -18,13 +18,21 @@ shaken = mods(pd.read_csv("C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Docum
 
 GW = pd.read_csv("C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Documents/R/Radon Paper/Final Rn scripts/Groundwater Samples_2.csv")[["method", "mid", "rn_raw", "rn_eqn", "error"]]
 
-# --- Filter shaken for method == "two" ---
-method2 = shaken[shaken["method"] == "two"].copy()
+
 # --- Merge datasets on well midpoint (mid) ---
-merged = pd.merge(GW, method2, on="mid", suffixes=("_gw", "_m2"))
-print("Shaken method2 mids:", method2["mid"].unique())
-print("GW mids:", GW["mid"].unique())
-print("Data types:", method2["mid"].dtype, GW["mid"].dtype)
+merged = pd.merge(GW, shaken, on="mid", suffixes=("_gw", "_m2"))
+# Ensure 'mid' is numeric
+shaken["mid"] = pd.to_numeric(shaken["mid"], errors="coerce").round(2)
+GW["mid"] = pd.to_numeric(GW["mid"], errors="coerce").round(2)
+
+# Merge on rounded mid
+merged = pd.merge(GW, shaken, on="mid", suffixes=("_gw", "_m2"))
+print("Merged shape:", merged.shape)
+print(merged.head())
+print("Unique mids in GW not in shaken:",
+      set(GW["mid"]) - set(shaken["mid"]))
+print("Unique mids in shaken not in GW:",
+      set(shaken["mid"]) - set(GW["mid"]))
 # --- Scatter plot GW vs Method 2 ---
 plt.figure(figsize=(7, 6))
 sns.scatterplot(data=merged, x="rn_eqn_m2", y="rn_eqn_gw", s=80, color="navy")
