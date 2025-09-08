@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import seaborn as sns
 import os
 
@@ -91,9 +92,19 @@ stats["mean"] = np.exp(stats["mean"])
 
 methods = list(combo["method"].unique())
 units = list(combo["unit"].unique())  # should be ["G", "PG"]
+mpl.rcParams.update({
+    "font.size": 12,
+    "axes.titlesize": 12,
+    "axes.labelsize": 12,
+    "xtick.labelsize": 12,
+    "ytick.labelsize": 12,
+    "legend.fontsize": 12,
+    "legend.title_fontsize": 12
+})
 
 # --- Combined plot: Em (LHS) and Rn_eqn (RHS) ---
-fig, (ax2, ax1) = plt.subplots(1, 2, figsize=(15, 6), sharex=False)
+sns.set_style("whitegrid")
+fig, (ax2, ax1) = plt.subplots(1, 2, figsize=(15, 6),sharex=False)
 
 # --- Plot 2: Em_rate (left) ---
 sns.boxplot(
@@ -103,13 +114,15 @@ sns.boxplot(
 )
 
 # Add black triangles (means) centered in each box
+width = 0.8  # matches seaborn default for boxplot
 n_units = len(units)
-dodge = 0.8 / n_units
-for _, row in stats.iterrows():
-    method_index = methods.index(row["method"])
-    unit_index = units.index(row["unit"])
-    xpos = method_index - 0.4 + dodge * (unit_index + 0.5)
-    ax2.scatter(xpos, row["mean"], marker="^", s=100, color="black", zorder=5)
+dodge = width / n_units
+#for _, row in stats.iterrows():
+#    method_index = methods.index(row["method"])
+#    unit_index = units.index(row["unit"])
+#    # center of the group + offset for this unit
+#    xpos = method_index + (unit_index - (n_units-1)/2) * dodge
+#    ax2.scatter(xpos, row["mean"], marker="^", s=100, color="black", zorder=5)
 
 
 ax2.set_ylabel(r"$E_m$ (Bq/kg)")
@@ -125,11 +138,11 @@ sns.boxplot(
     fliersize=2, width=0.5, ax=ax1
 )
 
-for _, row in means.iterrows():
-    method_index = methods.index(row["method"])
-    unit_index = units.index(row["unit"])
-    xpos = method_index - 0.4 + dodge * (unit_index + 0.5)
-    ax1.scatter(xpos, row["mean"], marker="^", s=100, color="black", zorder=5)
+#for _, row in means.iterrows():
+#    method_index = methods.index(row["method"])
+#    unit_index = units.index(row["unit"])
+#    xpos = method_index + (unit_index - (n_units-1)/2) * dodge
+#    ax1.scatter(xpos, row["mean"], marker="^", s=100, color="black", zorder=5)
 
 
 ax1.set_ylabel(r"$R_{eq}$ (Bq/L)")

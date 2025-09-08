@@ -13,6 +13,10 @@ grain_size['depth'] = pd.Categorical(grain_size['depth'], categories=grain_size[
 grain_size['ratio'] = grain_size['water_vol'] / grain_size['sed_mass']
 grain_size['em_rate'] = grain_size['rn_water'] * grain_size['ratio']
 grain_size['em_error'] = grain_size['rn_error'] * grain_size['ratio']
+grain_size['por'] = 0.17  # Assuming all samples are from unit 'G'
+grain_size['fact'] = 2.65 * ((1 - grain_size['por']) / grain_size['por'])
+grain_size['rn_eqn'] = grain_size['em_rate'] * grain_size['fact']
+grain_size['error'] = grain_size['em_error'] * grain_size['fact']
 
 gsize_order = ["<0.063", "0.063", "0.125", "0.25", "0.5", "1", "2", "4", "bulk"]
 
@@ -29,7 +33,9 @@ averages = (
         avg_Rn_error=('rn_error', 'mean'),
         mean_em_rate=('em_rate', 'mean'),
         min_em_rate=('em_rate', 'min'),
-        max_em_rate=('em_rate', 'max')
+        max_em_rate=('em_rate', 'max'),
+        avg_Rn_eqn=('rn_eqn', 'mean'),
+        avg_error=('error', 'mean'),
     )
     .reset_index()
 )
@@ -41,8 +47,8 @@ g = sns.FacetGrid(averages, row="depth", sharey=False, height=2, aspect=6)
 
 def facet_scatter(data, color, **kwargs):
     plt.errorbar(
-        data['avg_Rn_water'], data['gsize'],
-        xerr=data['avg_Rn_error'],
+        data['avg_Rn_eqn'], data['gsize'],
+        xerr=data['avg_Rn_eqn'],
         fmt='o', color="navy", ecolor="black", elinewidth=1, capsize=4
     )
 
