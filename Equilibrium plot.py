@@ -18,7 +18,7 @@ out_path = os.path.join(out_dir, "combo_plot_py.png")
 samples = (
     pd.read_csv("C:/Users/robbl/OneDrive - lincolnagritech.co.nz/Rn paper/Selwyn_Rn.csv")
     #.dropna()
-    .query("season == 'summer' & method == 'wat250'")
+    #.query("season == 'summer' & method == 'wat250'")
 )
 
 samples_1 = (
@@ -66,12 +66,11 @@ ax1.errorbar(samples["distance"], samples["rn"]/1000,
 # fit line
 #ax1.plot(dat["distance"], dat["rn"]/1000, "--", color="grey", lw=1)
 
-ax1.axhline(eqlbrm/1000, ls="--", color="red", lw=0.5)
+ax1.axhline(eqlbrm/1000, color="grey", lw=0.8, dashes=(10,4))
 ax1.text(200, eqlbrm/1000+0.2, "equilibrium", color="grey", fontsize=12, fontstyle="italic")
 ax1.set_xlabel("Distance from river (m)", fontsize=12)
-ax1.set_ylabel(r"$R_{w}$ (Bq/l)", fontsize=12)
-ax1.set_xlim(-20,600)
-ax1.set_ylim(0,10.5)
+ax1.set_ylabel(r"$Rn_{w}$ (Bq/l)", fontsize=12)
+
 ax1.set_xticks(np.arange(0,601,100))
 ax1.set_yticks(np.arange(0,11,1))
 ax1.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.7)
@@ -119,19 +118,21 @@ adjust_text(
 )
 #ax2.plot(dat["depth"], dat["rn"], "--", color="grey", lw=1)
 
-ax2.axhline(eqlbrm, ls="--", color="red", lw=0.5)
+ax2.axhline(eqlbrm/1000, color="grey", lw=0.8, dashes=(10,4))
 ax2.text(12, eqlbrm+0.4, "equilibrium", color="grey", fontsize=12, fontstyle="italic")
 ax2.set_xlabel("Depth (m bgl)", fontsize=12)
-ax2.set_ylabel("Rw (Bq/l)", fontsize=12)
-ax2.set_xlim(-1,35)
-ax2.set_ylim(0,22)
+ax2.set_ylabel(r"$Rn_{w}$ (Bq/l)", fontsize=12)
+
 ax2.set_xticks(np.arange(0,36,5))
 ax2.set_yticks(np.arange(0,22,2))
 ax2.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.7)
 
 ax2.legend(title=None, loc="lower right")
 ax2.text(0.02, 0.95, "b", transform=ax2.transAxes, fontsize=16, fontweight="bold", va="top")  # panel label
-
+ax1.set_xlim(-20,500)
+ax1.set_ylim(0,10.5)
+ax2.set_xlim(-1,30)
+ax2.set_ylim(0,22)
 plt.tight_layout()
 plt.savefig(out_path, dpi=300)
 plt.show()
