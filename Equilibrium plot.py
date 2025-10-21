@@ -118,7 +118,7 @@ adjust_text(
 )
 #ax2.plot(dat["depth"], dat["rn"], "--", color="grey", lw=1)
 
-ax2.axhline(eqlbrm/1000, color="grey", lw=0.8, dashes=(10,4))
+ax2.axhline( color="grey", lw=0.8, dashes=(10,4))
 ax2.text(12, eqlbrm+0.4, "equilibrium", color="grey", fontsize=12, fontstyle="italic")
 ax2.set_xlabel("Depth (m bgl)", fontsize=12)
 ax2.set_ylabel(r"$Rn_{w}$ (Bq/l)", fontsize=12)
